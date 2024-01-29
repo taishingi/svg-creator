@@ -13,6 +13,6 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: deps
-      run: sudo apt-get install -y wget && wget https://raw.githubusercontent.com/taishingi/zuu/master/pre-commit
+      run: sudo apt-get install -y wget libxml2-utils && wget https://raw.githubusercontent.com/taishingi/zuu/master/pre-commit
     - name: zuu
       run: bash pre-commit
