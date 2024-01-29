@@ -7,6 +7,7 @@ pub struct Svg {
     view_box: String,
     width: i32,
     height: i32,
+    id: String,
 }
 
 impl Svg {
@@ -17,21 +18,15 @@ impl Svg {
     /// - `height`      The svg height
     /// - `view_box`    The svg viewBox
     ///
-    pub fn new(width: i32, height: i32, view_box: Option<String>) -> Self {
-        match view_box {
-            None => Self {
+    pub fn new(width: i32, height: i32, view_box: String,id:String) -> Self {
+            Self
+            {
                 svg: String::new(),
-                view_box: String::new(),
+                view_box,
                 width,
                 height,
-            },
-            Some(x) => Self {
-                svg: String::new(),
-                view_box: x,
-                width,
-                height,
-            },
-        }
+                id
+            }
     }
 
     ///
@@ -39,9 +34,9 @@ impl Svg {
     ///
     pub fn start(&mut self) -> &mut Self {
         if self.view_box.is_empty() {
-            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" role=\"img\">", self.width, self.height).as_str());
+            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.id).as_str());
         } else {
-            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" viewBox=\"{}\" role=\"img\">", self.width, self.height,self.view_box).as_str());
+            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.view_box,self.id).as_str());
         }
         self
     }
@@ -115,10 +110,11 @@ impl Svg {
     pub fn uses(&mut self, id: &str, transform: &str,href: Option<String>) -> &mut Self {
         if href.is_some() {
             self.svg
-                .push_str(format!("<use xlink:href=\"#{id}\" transform=\"{transform}\" xlink:href=\"#{}\" /> ",href.unwrap().as_str()).as_str());
+                .push_str(format!("<use id=\"{id}\" xlink:href=\"#{}\" transform=\"{transform}\"/>",href.unwrap().as_str()).as_str());
+        }else{
+            self.svg
+                .push_str(format!("<use id=\"{id}\" transform=\"{transform}\"/>").as_str());
         }
-        self.svg
-            .push_str(format!("<use xlink:href=\"#{id}\" transform=\"{transform}\"/>").as_str());
         self
     }
 
