@@ -1,12 +1,14 @@
 use std::fs;
+use std::fs::File;
 use std::io::Write;
 use std::path::Path;
+use std::process::Command;
 
 pub struct Svg {
     svg: String,
     view_box: String,
-    width: i32,
-    height: i32,
+    width: f64,
+    height: f64,
     id: String,
 }
 
@@ -19,7 +21,7 @@ impl Svg {
     /// - `view_box`    The svg viewBox
     ///
     #[must_use]
-    pub fn new(width: i32, height: i32, view_box: String, id: String) -> Self {
+    pub fn new(width: f64, height: f64, view_box: String, id: String) -> Self {
         Self {
             svg: String::new(),
             view_box,
@@ -27,6 +29,15 @@ impl Svg {
             height,
             id,
         }
+    }
+
+    pub fn animate(&mut self) -> &mut Self {
+        self.svg.push_str("<animate ");
+        self
+    }
+    pub fn values(&mut self, value: &str) -> &mut Self {
+        self.svg.push_str(format!("values=\"{value}\" ").as_str());
+        self
     }
 
     ///
@@ -88,6 +99,14 @@ impl Svg {
     }
 
     ///
+    /// # Start an ellipse
+    ///
+    pub fn ellipse(&mut self) -> &mut Self {
+        self.svg.push_str("<ellipse ");
+        self
+    }
+
+    ///
     /// # Close a text
     ///
     pub fn text_end(&mut self) -> &mut Self {
@@ -130,6 +149,16 @@ impl Svg {
         self.svg.push_str(format!("dur=\"{duration}\" ").as_str());
         self
     }
+
+    ///
+    /// # Set a maximum duration
+    ///
+    /// - `duration`    The max duration
+    ///
+    pub fn max(&mut self, duration: &str) -> &mut Self {
+        self.svg.push_str(format!("max=\"{duration}\" ").as_str());
+        self
+    }
     ///
     /// # Set the beginning of the duration
     ///
@@ -157,6 +186,16 @@ impl Svg {
     ///
     pub fn to(&mut self, to: &str) -> &mut Self {
         self.svg.push_str(format!("to=\"{to}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # The maximum value
+    ///
+    /// - `to` The max value
+    ///
+    pub fn key_times(&mut self, key: &str) -> &mut Self {
+        self.svg.push_str(format!("keyTimes=\"{key}\" ").as_str());
         self
     }
 
@@ -189,6 +228,26 @@ impl Svg {
     pub fn text_anchor(&mut self, anchor: &str) -> &mut Self {
         self.svg
             .push_str(format!("text-anchor=\"{anchor}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Set the text-anchor position
+    ///
+    /// - `d` The new position
+    ///
+    pub fn dx(&mut self, d: &str) -> &mut Self {
+        self.svg.push_str(format!("dx=\"{d}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Set d on y-axis
+    ///
+    /// - `d` The new position
+    ///
+    pub fn dy(&mut self, d: &str) -> &mut Self {
+        self.svg.push_str(format!("dy=\"{d}\" ").as_str());
         self
     }
 
@@ -239,6 +298,15 @@ impl Svg {
     pub fn transform(&mut self, transform: &str) -> &mut Self {
         self.svg
             .push_str(format!("transform=\"{transform}\" ").as_str());
+        self
+    }
+    ///
+    /// # Set a path length
+    ///
+    /// - `l` The path length
+    ///
+    pub fn path_length(&mut self, l: &str) -> &mut Self {
+        self.svg.push_str(format!("pathLength=\"{l}\" ").as_str());
         self
     }
 
@@ -467,13 +535,30 @@ impl Svg {
     /// - `dir`         The directory to save the svg
     /// - `filename`    The filename without the extension
     ///
-    pub fn save(&mut self, dir: &str, filename: &str) -> std::io::Result<()> {
+    /// # Return
+    ///
+    /// 0 On success
+    /// 1 on lint failure
+    ///
+    pub fn save(&mut self, dir: &str, filename: &str) -> i32 {
         if !Path::new(dir).exists() {
             fs::create_dir(dir).expect("failed to create the directory");
         }
-        let mut f = fs::File::create(format!("{dir}/{filename}.svg").as_str())
-            .expect("failed to create the file");
+        let file = format!("{dir}/{filename}.svg");
+        let mut f = File::create(file.as_str()).expect("failed to create the file");
         f.write_all(self.svg.as_bytes()).expect("");
-        f.sync_data()
+        assert!(f.sync_data().is_ok());
+        if !Command::new("xmllint")
+            .arg("--pedantic")
+            .arg(file.as_str())
+            .stderr(File::create(format!("{filename}_check")).expect("failed to create the file"))
+            .output()
+            .unwrap()
+            .status
+            .success()
+        {
+            return 1;
+        }
+        0
     }
 }
