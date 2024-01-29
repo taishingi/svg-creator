@@ -3,3 +3,6 @@ distros/
 Cargo.lock
 flags/
 .idea/
+*_check
+animates/
+text/
