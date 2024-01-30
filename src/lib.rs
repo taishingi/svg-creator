@@ -54,7 +54,7 @@ mod tests {
             .d("M0,-30 17.63355,24.27051 -28.53171,-9.27051H28.53171L-17.63355,24.27051")
             .id("s")
             .close()
-            .g_end()
+            .group_end()
             .u()
             .href("s")
             .transform("translate(300,60) rotate(23.036243)")

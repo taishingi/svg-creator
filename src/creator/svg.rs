@@ -74,11 +74,17 @@ impl Svg {
         self.svg.push_str("<g ");
         self
     }
+
+    pub fn group(&mut self) -> &mut Self {
+        self.svg.push_str("<g>");
+        self
+    }
+
     ///
     /// # Start a link
     ///
     pub fn a(&mut self) -> &mut Self {
-        self.svg.push_str("<a ");
+        self.svg.push_str("<a target=\"_blank\" ");
         self
     }
 
@@ -121,6 +127,17 @@ impl Svg {
     ///
     pub fn class(&mut self, class: &str) -> &mut Self {
         self.svg.push_str(format!("class=\"{class}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Add a class
+    ///
+    /// - `css` The class name
+    ///
+    pub fn css(&mut self, css: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("<style text=\"text/css\">{css}</style>").as_str());
         self
     }
 
@@ -285,8 +302,18 @@ impl Svg {
     ///
     /// # Close a group
     ///
-    pub fn g_end(&mut self) -> &mut Self {
+    pub fn group_end(&mut self) -> &mut Self {
         self.svg.push_str("</g>");
+        self
+    }
+
+    pub fn defs(&mut self) -> &mut Self {
+        self.svg.push_str("<defs>");
+        self
+    }
+
+    pub fn defs_end(&mut self) -> &mut Self {
+        self.svg.push_str("</defs>");
         self
     }
 
@@ -474,8 +501,18 @@ impl Svg {
     /// - `href` the href
     ///
     pub fn href(&mut self, href: &str) -> &mut Self {
+        self.svg.push_str(format!("href=\"{href}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Configure a title
+    ///
+    /// - `title` the title
+    ///
+    pub fn title(&mut self, title: &str) -> &mut Self {
         self.svg
-            .push_str(format!("xlink:href=\"#{href}\" ").as_str());
+            .push_str(format!("<title>{title}</title>").as_str());
         self
     }
 
