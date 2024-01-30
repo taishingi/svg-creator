@@ -44,11 +44,7 @@ impl Svg {
     /// # Start the svg
     ///
     pub fn start(&mut self) -> &mut Self {
-        if self.view_box.is_empty() {
-            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.id).as_str());
-        } else {
-            self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.view_box,self.id).as_str());
-        }
+        self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.view_box,self.id).as_str());
         self
     }
 
@@ -67,6 +63,7 @@ impl Svg {
         self.svg.push_str("/>");
         self
     }
+
     ///
     /// # Start a group
     ///
@@ -75,8 +72,21 @@ impl Svg {
         self
     }
 
+    ///
+    /// # Create a group
+    ///
     pub fn group(&mut self) -> &mut Self {
         self.svg.push_str("<g>");
+        self
+    }
+
+    ///
+    /// # Add a target to a link
+    ///
+    /// - `target` The target
+    ///
+    pub fn target(&mut self, target: &str) -> &mut Self {
+        self.svg.push_str(format!("target=\"{target}\" ").as_str());
         self
     }
 
@@ -84,7 +94,7 @@ impl Svg {
     /// # Start a link
     ///
     pub fn a(&mut self) -> &mut Self {
-        self.svg.push_str("<a target=\"_blank\" ");
+        self.svg.push_str("<a ");
         self
     }
 
@@ -506,7 +516,18 @@ impl Svg {
     }
 
     ///
-    /// # Configure a title
+    /// # Configure a href
+    ///
+    /// - `href` the href
+    ///
+    pub fn link(&mut self, href: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("xlink:href=\"{href}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Create a title
     ///
     /// - `title` the title
     ///
