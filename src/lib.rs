@@ -8,102 +8,102 @@ mod tests {
     #[test]
     pub fn japan() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 900 600"),
-                String::from("japan")
-            )
-            .start()
-            .rect()
-            .width(900.0)
-            .height(600.0)
-            .fill("#fff")
-            .close()
-            .circle()
-            .cx(450.0)
-            .cy(300.0)
-            .r(180.0)
-            .fill("#bc002d")
-            .close()
-            .end()
-            .save("flags", "japan"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "japan")
+                .start()
+                .rect()
+                .width(900.0, "px")
+                .height(600.0, "px")
+                .fill("#fff")
+                .close()
+                .circle()
+                .cx(450.0, "px")
+                .cy(300.0, "px")
+                .r(180.0, "px")
+                .fill("#bc002d")
+                .close()
+                .end()
+                .save("flags", "japan"),
+            0
+        );
+    }
+    #[test]
+    pub fn clippy() {
+        assert_eq!(
+            Svg::badge(
+                true,
+                "clippy",
+                "failed",
+                "success",
+                "https://simpleicons.org/icons/rust.svg",
+                "badges",
+                "clippy"
+            ),
             0
         );
     }
     #[test]
     pub fn china() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 900 600"),
-                String::from("china")
-            )
-            .start()
-            .path()
-            .fill("#EE1C25")
-            .d("M0 0h900v600H0")
-            .close()
-            .g()
-            .transform("translate(150,150) scale(3)")
-            .tag_close()
-            .path()
-            .fill("#FF0")
-            .d("M0,-30 17.63355,24.27051 -28.53171,-9.27051H28.53171L-17.63355,24.27051")
-            .id("s")
-            .close()
-            .group_end()
-            .u()
-            .href("s")
-            .transform("translate(300,60) rotate(23.036243)")
-            .close()
-            .u()
-            .href("s")
-            .transform("translate(360,120) rotate(45.869898)")
-            .close()
-            .u()
-            .href("s")
-            .transform("translate(360,210) rotate(69.945396)")
-            .close()
-            .u()
-            .href("s")
-            .transform("translate(300,270) rotate(20.659808)")
-            .close()
-            .end()
-            .save("flags", "china"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "china")
+                .start()
+                .path()
+                .fill("#EE1C25")
+                .d("M0 0h900v600H0")
+                .close()
+                .g()
+                .transform("translate(150,150) scale(3)")
+                .close_tag()
+                .path()
+                .fill("#FF0")
+                .d("M0,-30 17.63355,24.27051 -28.53171,-9.27051H28.53171L-17.63355,24.27051")
+                .id("s")
+                .close()
+                .close_group()
+                .u()
+                .href("s")
+                .transform("translate(300,60) rotate(23.036243)")
+                .close()
+                .u()
+                .href("s")
+                .transform("translate(360,120) rotate(45.869898)")
+                .close()
+                .u()
+                .href("s")
+                .transform("translate(360,210) rotate(69.945396)")
+                .close()
+                .u()
+                .href("s")
+                .transform("translate(300,270) rotate(20.659808)")
+                .close()
+                .end()
+                .save("flags", "china"),
             0
         );
     }
     #[test]
     pub fn france() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 900 600"),
-                String::from("france")
-            )
-            .start()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#fff")
-            .x(300.0)
-            .close()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#ed2939")
-            .x(600.0)
-            .close()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#002395")
-            .close()
-            .end()
-            .save("flags", "france"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "france")
+                .start()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#fff")
+                .x(300.0, "px")
+                .close()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#ed2939")
+                .x(600.0, "px")
+                .close()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#002395")
+                .close()
+                .end()
+                .save("flags", "france"),
             0
         );
     }
@@ -111,39 +111,39 @@ mod tests {
     #[test]
     pub fn italy() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 900 600"),
-                String::from("italy")
-            )
-            .start()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#F1F2F1")
-            .x(300.0)
-            .close()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#ce2b37")
-            .x(600.0)
-            .close()
-            .rect()
-            .width(300.0)
-            .height(600.0)
-            .fill("#009246")
-            .close()
-            .end()
-            .save("flags", "italy"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "italy")
+                .start()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#F1F2F1")
+                .x(300.0, "px")
+                .close()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#ce2b37")
+                .x(600.0, "px")
+                .close()
+                .rect()
+                .width(300.0, "px")
+                .height(600.0, "px")
+                .fill("#009246")
+                .close()
+                .end()
+                .save("flags", "italy"),
             0
         );
     }
 
     #[test]
     pub fn algeria() {
-        assert_eq!(Svg::new(900.0, 600.0, String::from("0 0 900 600"),String::from("algeria"))
+        assert_eq!(Svg::new(    900.0,
+                                "px",
+                                600.0,
+                                "px",
+                                "0 0 900 600",
+                                "algeria")
                 .start()
                 .path().fill("#fff").d("M0 0h900v600H0z").close()
                 .path().fill("#063").d("M0 0h450v600H0z").close()
@@ -155,79 +155,79 @@ mod tests {
     #[test]
     pub fn morocco() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 90000 60000"),
-                String::from("morocco")
-            )
-            .start()
-            .path()
-            .fill("#c1272d")
-            .d("m0 0h90000v60000H0z")
-            .close()
-            .path()
-            .fill("none")
-            .d("m45000 17308 7460 22960-19531-14190h24142L37540 40268z")
-            .stroke("#006233")
-            .stroke_width(1426.0)
-            .close()
-            .end()
-            .save("flags", "morocco"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "morocco")
+                .start()
+                .path()
+                .fill("#c1272d")
+                .d("m0 0h90000v60000H0z")
+                .close()
+                .path()
+                .fill("none")
+                .d("m45000 17308 7460 22960-19531-14190h24142L37540 40268z")
+                .stroke("#006233")
+                .stroke_width(1426.0, "px")
+                .close()
+                .end()
+                .save("flags", "morocco"),
             0
         );
     }
     #[test]
     pub fn greece() {
         assert_eq!(
-            Svg::new(
-                900.0,
-                600.0,
-                String::from("0 0 27 18"),
-                String::from("greece")
-            )
-            .start()
-            .rect()
-            .width(27.0)
-            .height(18.0)
-            .fill("#0D5EAF")
-            .close()
-            .path()
-            .fill("none")
-            .d("M5,0V11 M0,5H10 M10,3H27 M10,7H27 M0,11H27 M0,15H27")
-            .stroke("#fff")
-            .stroke_width(2.0)
-            .close()
-            .end()
-            .save("flags", "greece"),
+            Svg::new(900.0, "px", 600.0, "px", "0 0 900 600", "greece")
+                .start()
+                .rect()
+                .width(27.0, "px")
+                .height(18.0, "px")
+                .fill("#0D5EAF")
+                .close()
+                .path()
+                .fill("none")
+                .d("M5,0V11 M0,5H10 M10,3H27 M10,7H27 M0,11H27 M0,15H27")
+                .stroke("#fff")
+                .stroke_width(2.0, "px")
+                .close()
+                .end()
+                .save("flags", "greece"),
             0
         );
     }
     #[test]
     pub fn arch() {
-        assert_eq!(Svg::new(512.0, 512.0, String::from("0 0 512 512"),String::from("arch"))
+        assert_eq!(Svg::new(    512.0,
+                                "px",
+                                512.0,
+                                "px",
+                                "0 0 512 512",
+                                "arch")
                 .start()
                 .rect()
-                .width(512.0)
-                .height(512.0)
+                .width(512.0,"px")
+                .height(512.0,"px")
                 .fill("#fff")
-                .rx(15.0).close()
+                .rx(15.0,"px").close()
                 .a()
                 .href("https://archlinux.org")
                 .target("_blank")
-                .tag_close()
+                .close_tag()
                 .title("The arch distro")
-                .path().fill("none").d("M5,0V11 M0,5H10 M10,3H27 M10,7H27 M0,11H27 M0,15H27").stroke("#fff").stroke_width(2.0).close()
+                .path().fill("none").d("M5,0V11 M0,5H10 M10,3H27 M10,7H27 M0,11H27 M0,15H27").stroke("#fff").stroke_width(2.0,"px").close()
                 .path().fill("#1793d1").d("M256 72c-14 35-23 57-39 91 10 11 22 23 41 36-21-8-35-17-45-26-21 43-53 103-117 220 50-30 90-48 127-55-2-7-3-14-3-22v-1c1-33 18-58 38-56 20 1 36 29 35 62l-2 17c36 7 75 26 125 54l-27-50c-13-10-27-23-55-38 19 5 33 11 44 17-86-159-93-180-122-250z")
                 .close()
-                .a_end()
+                .close_a()
                 .end()
             .save("distros", "arch"),0);
     }
 
     #[test]
     pub fn fedora() {
-        assert_eq!(Svg::new(267.0, 267.0, String::from("0 0 267 267"),String::from("fedora"))
+        assert_eq!(Svg::new(    267.0,
+                                "px",
+                                267.0,
+                                "px",
+                                "0 0 267 267",
+                                "fedora")
                 .start()
                        .path()
                        .d("M 266.62575,133.50613 C 266.62575,59.98128 207.02222,0.37583 133.49792,0.37583 C 60.00668,0.37583 0.42639,59.93123 0.37425,133.41225 L 0.37425,236.4333 C 0.4138,253.11763 13.94545,266.62417 30.64027,266.62417 L 133.55192,266.62417 C 207.05167,266.59532 266.62575,207.01142 266.62575,133.50613")
@@ -239,7 +239,7 @@ mod tests {
                        .id("in")
                        .fill("none")
                        .stroke("#3c6eb4")
-                       .stroke_width(29.21)
+                       .stroke_width(29.21,"px")
                        .close()
                        .u()
                        .transform("matrix(-1,0,0,-1,249.71151,284.2882)")
@@ -268,76 +268,68 @@ mod tests {
     #[test]
     pub fn animate() {
         assert_eq!(
-            Svg::new(
-                10.0,
-                10.0,
-                String::from("0 0 10 10"),
-                String::from("animate")
-            )
-            .start()
-            .rect()
-            .width(10.0)
-            .height(10.0)
-            .tag_close()
-            .animate()
-            .attribute_name("rx")
-            .values("0;5;0")
-            .dur("10s")
-            .repeat_count("indefinite")
-            .close()
-            .rec_end()
-            .end()
-            .save("animates", "rectangle"),
+            Svg::new(10.0, "px", 10.0, "px", "0 0 10 10", "rec")
+                .start()
+                .rect()
+                .width(10.0, "px")
+                .height(10.0, "px")
+                .close_tag()
+                .animate()
+                .attribute_name("rx")
+                .values("0;5;0")
+                .dur("10s")
+                .repeat_count("indefinite")
+                .close()
+                .close_rect()
+                .end()
+                .save("animates", "rectangle"),
             0
         );
     }
     #[test]
     pub fn ellipse() {
         assert_eq!(
-            Svg::new(
-                200.0,
-                100.0,
-                String::from("0 0 200 100"),
-                String::from("ellipse")
-            )
-            .start()
-            .ellipse()
-            .cx(100.0)
-            .cy(50.0)
-            .rx(100.0)
-            .ry(50.0)
-            .close()
-            .end()
-            .save("animates", "ellipse"),
+            Svg::new(200.0, "px", 100.0, "px", "0 0 200 100", "ellipse")
+                .start()
+                .ellipse()
+                .cx(100.0, "px")
+                .cy(50.0, "px")
+                .rx(100.0, "px")
+                .ry(50.0, "px")
+                .close()
+                .end()
+                .save("animates", "ellipse"),
             0
         );
     }
 
     #[test]
-    pub fn text() {
+    pub fn zuu() {
         assert_eq!(
-            Svg::new(
-                100.0,
-                50.0,
-                String::from("0 0 100 50"),
-                String::from("text")
-            )
-            .start()
-            .text()
-            .x(10.0)
-            .y(20.0)
-            .style(
-                "font-family: Times New Roman;
-               font-size  : 24;
-               background : transparent;
-               fill       : #0000ff;"
-            )
-            .text_anchor("middle")
-            .tag_close()
-            .content("Arch linux")
-            .text_end()
-            .end()
-            .save("text", "arch"),
+            Svg::new(10.0, "px", 10.0, "px", "0 0 10 10", "zuu")
+                .start()
+                .image("https://simpleicons.org/icons/grunt.svg")
+                .width(14.0, "px")
+                .height(14.0, "px")
+                .close()
+                .text()
+                .x(495.26276, "px")
+                .y(175.0, "px")
+                .transform("scale(0.1)")
+                .fill("#222")
+                .close_tag()
+                .content("CLIPPY")
+                .close_text()
+                .text()
+                .x(1231.3833, "px")
+                .y(175.0, "px")
+                .transform("scale(0.1)")
+                .fill("#222")
+                .close_tag()
+                .content("SUCCESS")
+                .close_text()
+                .end()
+                .save("graphics", "zuu"),
             0
         );
     }

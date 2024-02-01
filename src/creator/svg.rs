@@ -9,6 +9,8 @@ pub struct Svg {
     view_box: String,
     width: f64,
     height: f64,
+    width_unit: String,
+    height_unit: String,
     id: String,
 }
 
@@ -21,13 +23,22 @@ impl Svg {
     /// - `view_box`    The svg viewBox
     ///
     #[must_use]
-    pub fn new(width: f64, height: f64, view_box: String, id: String) -> Self {
+    pub fn new(
+        width: f64,
+        width_unit: &str,
+        height: f64,
+        height_unit: &str,
+        view: &str,
+        id: &str,
+    ) -> Self {
         Self {
             svg: String::new(),
-            view_box,
+            view_box: view.to_string(),
             width,
             height,
-            id,
+            width_unit: width_unit.to_string(),
+            height_unit: height_unit.to_string(),
+            id: id.to_string(),
         }
     }
 
@@ -39,12 +50,34 @@ impl Svg {
         self.svg.push_str(format!("values=\"{value}\" ").as_str());
         self
     }
+    pub fn filter(&mut self, f: &str) -> &mut Self {
+        self.svg.push_str(format!("filter=\"{f}\" ").as_str());
+        self
+    }
+    pub fn result(&mut self, f: &str) -> &mut Self {
+        self.svg.push_str(format!("filter=\"{f}\" ").as_str());
+        self
+    }
+    pub fn in1(&mut self, i: &str) -> &mut Self {
+        self.svg.push_str(format!("in=\"{i}\" ").as_str());
+        self
+    }
+
+    pub fn in2(&mut self, i: &str) -> &mut Self {
+        self.svg.push_str(format!("in2=\"{i}\" ").as_str());
+        self
+    }
+
+    pub fn fe_offset(&mut self) -> &mut Self {
+        self.svg.push_str("<feOffset ");
+        self
+    }
 
     ///
     /// # Start the svg
     ///
     pub fn start(&mut self) -> &mut Self {
-        self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:svg=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}\" height=\"{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width, self.height,self.view_box,self.id).as_str());
+        self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}{}\" height=\"{}{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width,self.width_unit, self.height,self.height_unit,self.view_box,self.id).as_str());
         self
     }
 
@@ -53,6 +86,168 @@ impl Svg {
     ///
     pub fn circle(&mut self) -> &mut Self {
         self.svg.push_str("<circle ");
+        self
+    }
+
+    fn generate_badge(
+        t: bool,
+        img: &str,
+        label: &str,
+        s: &str,
+        e: &str,
+        dir: &str,
+        f: &str,
+    ) -> i32 {
+        let mut svg = Self::new(164.0, "px", 28.0, "px", "0 0 164 28", "");
+        let mut right_bg = String::new();
+        let mut left_bg = String::new();
+        let mut text = String::new();
+        if t {
+            right_bg.push_str("#00ff00");
+            left_bg.push_str("#222");
+            text.push_str(s);
+        } else {
+            right_bg.push_str("#ff0000");
+            left_bg.push_str("#222");
+            text.push_str(e);
+        }
+        svg.start()
+            .g()
+            .shape_rendering("crispEdges")
+            .close_tag()
+            .rect()
+            .width(82.05, "px")
+            .height(28.0, "px")
+            .fill(left_bg.as_str())
+            .close_tag()
+            .close_rect()
+            .image(img)
+            .x(9.0, "px")
+            .y(7.0, "px")
+            .width(14.0, "px")
+            .height(14.0, "px")
+            .close()
+            .close_group()
+            .group()
+            .rect()
+            .x(82.05, "px")
+            .width(82.1716, "px")
+            .height(100.0, "px")
+            .fill(right_bg.as_str())
+            .close_tag()
+            .close_rect()
+            .text_anchor("middle")
+            .text_rendering("geometricPrecision")
+            .font_size(100.0, "px")
+            .close_tag()
+            .text()
+            .x(495.26276, "px")
+            .y(175.0, "px")
+            .transform("scale(0.1)")
+            .fill("#fff")
+            .text_length(410.5255, "px")
+            .close_tag()
+            .content(label)
+            .close_text()
+            .text()
+            .x(1231.3833, "px")
+            .y(175.0, "px")
+            .transform("scale(0.1)")
+            .font_weight("bold")
+            .fill("#fff")
+            .text_length(581.71564, "px")
+            .close_tag()
+            .content(text.as_str())
+            .close_text()
+            .close_group()
+            .end()
+            .save(dir, f)
+    }
+
+    #[must_use]
+    pub fn badge(
+        t: bool,
+        l: &str,
+        e: &str,
+        s: &str,
+        url: &str,
+        output_dir: &str,
+        filename: &str,
+    ) -> i32 {
+        Self::generate_badge(t, url, l, s, e, output_dir, filename)
+    }
+
+    fn text_length(&mut self, length: f64, unit: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("textLength=\"{length}{unit}\"").as_str());
+        self
+    }
+    fn font_weight(&mut self, weight: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("font-weight=\"{weight}\" ").as_str());
+        self
+    }
+    fn text_rendering(&mut self, rendering: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("text-rendering=\"{rendering}\" ").as_str());
+        self
+    }
+
+    fn shape_rendering(&mut self, rendering: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("shape-rendering=\"{rendering}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Start an image
+    ///
+    /// # Panics
+    ///
+    /// if base64 not work and wget not found
+    ///
+    pub fn image(&mut self, uri: &str) -> &mut Self {
+        let img = uri.split('/').last().expect("");
+        let base = File::create("b.txt").expect("");
+        if Path::new(format!("./{img}").as_str()).is_file() {
+            fs::remove_file(format!("./{img}").as_str()).expect("");
+        }
+        assert!(Command::new("wget")
+            .arg("-q")
+            .arg(uri)
+            .current_dir(".")
+            .spawn()
+            .expect("")
+            .wait()
+            .expect("")
+            .success());
+        assert!(Command::new("base64")
+            .arg(img)
+            .stdout(base)
+            .current_dir(".")
+            .spawn()
+            .expect("")
+            .wait()
+            .expect("")
+            .success());
+        self.svg.push_str(
+            format!(
+                "<image xlink:href=\"data:image/svg+xml;base64,{}\" ",
+                fs::read_to_string("b.txt").expect("a")
+            )
+            .as_str(),
+        );
+        if Path::new(format!("./{img}").as_str()).is_file() {
+            fs::remove_file(format!("./{img}").as_str()).expect("");
+        }
+        self
+    }
+
+    ///
+    /// # Close a circle
+    ///
+    pub fn close_circle(&mut self) -> &mut Self {
+        self.svg.push_str("</circle> ");
         self
     }
 
@@ -91,6 +286,29 @@ impl Svg {
     }
 
     ///
+    /// # Add a font family
+    ///
+    /// - `family` The font
+    ///
+    pub fn font_family(&mut self, family: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("font-family=\"{family}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Add a font size
+    ///
+    /// - `size` The font size
+    /// - `unit` The font unity
+    ///
+    pub fn font_size(&mut self, size: f64, unit: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("font-size=\"{size}{unit}\" ").as_str());
+        self
+    }
+
+    ///
     /// # Start a link
     ///
     pub fn a(&mut self) -> &mut Self {
@@ -101,7 +319,7 @@ impl Svg {
     ///
     /// # Close a link
     ///
-    pub fn a_end(&mut self) -> &mut Self {
+    pub fn close_a(&mut self) -> &mut Self {
         self.svg.push_str("</a> ");
         self
     }
@@ -125,7 +343,7 @@ impl Svg {
     ///
     /// # Close a text
     ///
-    pub fn text_end(&mut self) -> &mut Self {
+    pub fn close_text(&mut self) -> &mut Self {
         self.svg.push_str("</text> ");
         self
     }
@@ -137,6 +355,59 @@ impl Svg {
     ///
     pub fn class(&mut self, class: &str) -> &mut Self {
         self.svg.push_str(format!("class=\"{class}\" ").as_str());
+        self
+    }
+    ///
+    /// # Add a stroke miterlimit
+    ///
+    /// - `limit` The limit
+    ///
+    pub fn stroke_miterlimit(&mut self, limit: f64) -> &mut Self {
+        self.svg
+            .push_str(format!("stroke-miterlimit=\"{limit}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Add a pointer events
+    ///
+    /// - `event` The event
+    ///
+    pub fn pointer_events(&mut self, event: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("pointer-events=\"{event}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Add a system language events
+    ///
+    /// - `lang` The lang event
+    ///
+    pub fn system_language(&mut self, lang: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("systemLanguage=\"{lang}\" ").as_str());
+        self
+    }
+
+    pub fn div(&mut self) -> &mut Self {
+        self.svg
+            .push_str("<div xmlns=\"http://www.w3.org/1999/xhtml\"  ");
+        self
+    }
+
+    pub fn close_div(&mut self) -> &mut Self {
+        self.svg.push_str("</div>");
+        self
+    }
+
+    pub fn close_foreign_object(&mut self) -> &mut Self {
+        self.svg.push_str("</foreignObject>");
+        self
+    }
+
+    pub fn foreign_object(&mut self) -> &mut Self {
+        self.svg.push_str("<foreignObject ");
         self
     }
 
@@ -152,17 +423,115 @@ impl Svg {
     }
 
     ///
+    /// # Add a type
+    ///
+    /// - `t` The type name
+    ///
+    pub fn t(&mut self, t: &str) -> &mut Self {
+        self.svg.push_str(format!("type=\"{t} ").as_str());
+        self
+    }
+
+    ///
     /// # Close a tag
     ///
-    pub fn tag_close(&mut self) -> &mut Self {
+    pub fn close_tag(&mut self) -> &mut Self {
         self.svg.push_str("> ");
+        self
+    }
+
+    ///
+    /// # Start a tspan
+    ///
+    pub fn tspan(&mut self) -> &mut Self {
+        self.svg.push_str("<tspan ");
+        self
+    }
+
+    ///
+    /// # Close a tspan
+    ///
+    pub fn close_tspan(&mut self) -> &mut Self {
+        self.svg.push_str("</tspan> ");
+        self
+    }
+
+    ///
+    /// # Create a feMorphology
+    ///
+    pub fn fe_morphology(&mut self) -> &mut Self {
+        self.svg.push_str("<feMorphology ");
+        self
+    }
+
+    ///
+    /// # Create a feConvolveMatrix
+    ///
+    pub fn fe_convolve_matrix(&mut self) -> &mut Self {
+        self.svg.push_str("<feConvolveMatrix ");
+        self
+    }
+
+    ///
+    /// # Create a feBlend
+    ///
+    pub fn fe_blend(&mut self) -> &mut Self {
+        self.svg.push_str("<feBlend ");
+        self
+    }
+
+    ///
+    /// # Create a feColorMatrix
+    ///
+    pub fn fe_color_matrix(&mut self) -> &mut Self {
+        self.svg.push_str("<feColorMatrix ");
+        self
+    }
+
+    ///
+    /// # Start a span
+    ///
+    pub fn span(&mut self) -> &mut Self {
+        self.svg.push_str("<span ");
+        self
+    }
+
+    ///
+    /// # Start a span
+    ///
+    pub fn b(&mut self, text: &str) -> &mut Self {
+        self.svg.push_str(format!("<b>{text}</b>").as_str());
+        self
+    }
+
+    ///
+    /// # Close a span
+    ///
+    pub fn close_span(&mut self) -> &mut Self {
+        self.svg.push_str("</span> ");
+        self
+    }
+
+    ///
+    /// # Create a switch
+    ///
+    pub fn switch(&mut self) -> &mut Self {
+        self.svg.push_str("<switch> ");
+        self
+    }
+
+    ///
+    /// # Close a switch
+    ///
+    pub fn close_switch(&mut self) -> &mut Self {
+        self.svg.push_str("</switch> ");
         self
     }
 
     ///
     /// # Close a rect
     ///
-    pub fn rec_end(&mut self) -> &mut Self {
+    pub fn close_rect(&mut self) -> &mut Self {
         self.svg.push_str("</rect> ");
         self
     }
@@ -261,6 +630,17 @@ impl Svg {
     ///
     /// # Set the text-anchor position
     ///
+    /// - `align` The position
+    ///
+    pub fn alignment_baseline(&mut self, align: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("alignment-baseline=\"{align}\" ").as_str());
+        self
+    }
+
+    ///
+    /// # Set the text-anchor position
+    ///
     /// - `d` The new position
     ///
     pub fn dx(&mut self, d: &str) -> &mut Self {
@@ -312,18 +692,18 @@ impl Svg {
     ///
     /// # Close a group
     ///
-    pub fn group_end(&mut self) -> &mut Self {
-        self.svg.push_str("</g>");
+    pub fn close_group(&mut self) -> &mut Self {
+        self.svg.push_str("</g> ");
         self
     }
 
     pub fn defs(&mut self) -> &mut Self {
-        self.svg.push_str("<defs>");
+        self.svg.push_str("<defs> ");
         self
     }
 
-    pub fn defs_end(&mut self) -> &mut Self {
-        self.svg.push_str("</defs>");
+    pub fn close_deps(&mut self) -> &mut Self {
+        self.svg.push_str("</defs> ");
         self
     }
 
@@ -350,10 +730,12 @@ impl Svg {
     ///
     /// # Define a width
     ///
-    /// - `width` The width
+    /// - `width`   The width
+    /// - `unit`    The width unit
     ///
-    pub fn width(&mut self, width: f64) -> &mut Self {
-        self.svg.push_str(format!("width=\"{width}\" ").as_str());
+    pub fn width(&mut self, width: f64, unit: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("width=\"{width}{unit}\" ").as_str());
         self
     }
 
@@ -380,19 +762,21 @@ impl Svg {
     ///
     /// # Define  attribute defines a radius on the x-axis
     ///
-    /// - `rx` radius on the x-axis
+    /// - `rx`   radius on the x-axis
+    /// - `unit` radius on the x-axis unit
     ///
-    pub fn rx(&mut self, rx: f64) -> &mut Self {
-        self.svg.push_str(format!("rx=\"{rx}\" ").as_str());
+    pub fn rx(&mut self, rx: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("rx=\"{rx}{unit}\" ").as_str());
         self
     }
     ///
     /// # Define  attribute defines a radius on the y-axis
     ///
     /// - `ry` radius on the y-axis
+    /// - `unit` radius on the y-axis unit
     ///
-    pub fn ry(&mut self, ry: f64) -> &mut Self {
-        self.svg.push_str(format!("ry=\"{ry}\" ").as_str());
+    pub fn ry(&mut self, ry: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("ry=\"{ry}{unit}\" ").as_str());
         self
     }
 
@@ -417,30 +801,33 @@ impl Svg {
     ///
     /// # define a rayon
     ///
-    /// - `r`  The rayon
+    /// - `r`       The rayon
+    /// - `unit`    The rayon unit
     ///
-    pub fn r(&mut self, r: f64) -> &mut Self {
-        self.svg.push_str(format!("r=\"{r}\" ").as_str());
+    pub fn r(&mut self, r: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("r=\"{r}{unit}\" ").as_str());
         self
     }
 
     ///
     /// # Defines the x-axis coordinate for the center point of an element.
     ///
-    /// - `cx` the x-axis coordinate
+    /// - `cx`      The x-axis coordinate
+    /// - `unit`    The x-axis coordinate unit
     ///
-    pub fn cx(&mut self, cx: f64) -> &mut Self {
-        self.svg.push_str(format!("cx=\"{cx}\" ").as_str());
+    pub fn cx(&mut self, cx: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("cx=\"{cx}{unit}\" ").as_str());
         self
     }
 
     ///
     /// # defines the y-axis coordinate for the center point of an element.
     ///
-    /// - `cy` the y-axis coordinate
+    /// - `cy`      The y-axis coordinate
+    /// - `unit`    The y-axis coordinate unit
     ///
-    pub fn cy(&mut self, cy: f64) -> &mut Self {
-        self.svg.push_str(format!("cy=\"{cy}\" ").as_str());
+    pub fn cy(&mut self, cy: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("cy=\"{cy}{unit}\" ").as_str());
         self
     }
 
@@ -457,11 +844,12 @@ impl Svg {
     ///
     /// # Define a stoke width
     ///
-    /// - `width`  The stoke width
+    /// - `width`   The stoke width
+    /// - `unit`    The stoke width unit
     ///
-    pub fn stroke_width(&mut self, width: f64) -> &mut Self {
+    pub fn stroke_width(&mut self, width: f64, unit: &str) -> &mut Self {
         self.svg
-            .push_str(format!("stroke-width=\"{width}\" ").as_str());
+            .push_str(format!("stroke-width=\"{width}{unit}\" ").as_str());
         self
     }
 
@@ -469,9 +857,11 @@ impl Svg {
     /// # Define a height
     ///
     /// - `height`  The height
+    /// - `unit`    The height unit
     ///
-    pub fn height(&mut self, height: f64) -> &mut Self {
-        self.svg.push_str(format!("height=\"{height}\" ").as_str());
+    pub fn height(&mut self, height: f64, unit: &str) -> &mut Self {
+        self.svg
+            .push_str(format!("height=\"{height}{unit}\" ").as_str());
         self
     }
 
@@ -488,20 +878,22 @@ impl Svg {
     ///
     /// # Pos in x
     ///
-    /// - `x` The position in x
+    /// - `x`       The position in x
+    /// - `unit`    The position unit
     ///
-    pub fn x(&mut self, x: f64) -> &mut Self {
-        self.svg.push_str(format!("x=\"{x}\" ").as_str());
+    pub fn x(&mut self, x: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("x=\"{x}{unit}\" ").as_str());
         self
     }
 
     ///
     /// # Pos in y
     ///
-    /// - `y`   The position in y
+    /// - `y`       The position in y
+    /// - `unit`    The position unit
     ///
-    pub fn y(&mut self, y: f64) -> &mut Self {
-        self.svg.push_str(format!("y=\"{y}\" ").as_str());
+    pub fn y(&mut self, y: f64, unit: &str) -> &mut Self {
+        self.svg.push_str(format!("y=\"{y}{unit}\" ").as_str());
         self
     }
 
