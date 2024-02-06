@@ -77,7 +77,7 @@ impl Svg {
     /// # Start the svg
     ///
     pub fn start(&mut self) -> &mut Self {
-        self.svg.push_str(format!("<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}{}\" height=\"{}{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width,self.width_unit, self.height,self.height_unit,self.view_box,self.id).as_str());
+        self.svg.push_str(format!("<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" width=\"{}{}\" height=\"{}{}\" viewBox=\"{}\" role=\"img\" id=\"{}\">", self.width,self.width_unit, self.height,self.height_unit,self.view_box,self.id).as_str());
         self
     }
 
@@ -98,7 +98,7 @@ impl Svg {
         dir: &str,
         f: &str,
     ) -> i32 {
-        let mut svg = Self::new(164.0, "px", 28.0, "px", "0 0 164 28", "");
+        let mut svg = Self::new(164.0, "px", 28.0, "px", "0 0 164 28", label);
         let mut right_bg = String::new();
         let mut left_bg = String::new();
         let mut text = String::new();
